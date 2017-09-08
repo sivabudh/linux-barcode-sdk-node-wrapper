@@ -1,4 +1,4 @@
-# Node.js Barcode SDK Wrapper for Linux
+# Linux Barcode SDK Wrapper for Node.js
 Build the **Node.js** extension with Dynamsoft Barcode Reader SDK for Linux. Create server-side barcode reader apps using JavaScript.
 
 ## Environment
