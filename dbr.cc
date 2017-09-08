@@ -3,6 +3,7 @@
 #include <string.h>
 #include <uv.h>
 #include "DynamsoftBarcodeReader.h"
+#include <time.h>
 
 using namespace v8;
 
@@ -118,8 +119,16 @@ static void DetectionWorking(uv_work_t *req)
 	{
 		case FILE_STREAM:
 			{
-				if (worker->buffer)
+                if (worker->buffer)
+                {
+                    double duration;  
+                    clock_t start, end;  
+                    start = clock();  
 					ret = DBR_DecodeStreamEx(hBarcode, worker->buffer, worker->size, &pResults);
+                    end = clock();  
+                    duration = (double)(end - start) / CLOCKS_PER_SEC;  
+                    printf("%f seconds\n", duration);  
+                }
 			}
 			break;
 		case YUYV_BUFFER:
