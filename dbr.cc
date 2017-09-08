@@ -9,29 +9,6 @@ using namespace v8;
 #define DBR_NO_MEMORY 0
 #define DBR_SUCCESS   1
 
-typedef unsigned int DWORD;
-typedef int LONG;
-typedef unsigned short WORD;
-
-#pragma pack(push)
-#pragma pack(1)
-
-typedef struct tagBITMAPINFOHEADER {
-  DWORD biSize;
-  LONG biWidth;
-  LONG biHeight;
-  WORD biPlanes;
-  WORD biBitCount;
-  DWORD biCompression;
-  DWORD biSizeImage;
-  LONG biXPelsPerMeter;
-  LONG biYPelsPerMeter;
-  DWORD biClrUsed;
-  DWORD biClrImportant;
-} BITMAPINFOHEADER;
-
-#pragma pack(pop)
-
 // barcode reader handler
 void* hBarcode = NULL; 
 
@@ -88,49 +65,6 @@ struct BarcodeWorker
 	int height; 					// image height
 	BufferType bufferType;			// buffer type
 };
-
-bool ConvertCameraGrayDataToDIBBuffer(unsigned char* psrc, int size, int width, int height, unsigned char** ppdist, int *psize)
-{
-	BITMAPINFOHEADER bitmapInfo;
-	memset(&bitmapInfo, 0, sizeof(BITMAPINFOHEADER));
-
-	bitmapInfo.biBitCount = 8;
-	bitmapInfo.biWidth = width;
-	bitmapInfo.biHeight = height;
-	bitmapInfo.biSize = sizeof(BITMAPINFOHEADER);
-
-	int iStride = ((width * 8 + 31) >> 5) << 2;
-	int iImageSize = iStride * height;
-	if (size < iImageSize)
-		return false;
-
-	bitmapInfo.biSizeImage = iImageSize;
-
-	*psize = iImageSize + bitmapInfo.biSize + 1024;
-	*ppdist = new unsigned char[*psize];
-
-	//1. copy BITMAPINFOHEADER
-	memcpy(*ppdist, &bitmapInfo, sizeof(BITMAPINFOHEADER));
-
-	//2. copy gray color map
-	char rgba[1024] = { 0 };
-	for (int i = 0; i < 256; ++i)
-	{
-		rgba[i * 4] = rgba[i * 4 + 1] = rgba[i * 4 + 2] = rgba[i * 4 + 3] = i;
-	}
-	memcpy(*ppdist + sizeof(BITMAPINFOHEADER), rgba, 1024);
-
-	//3. copy gray data (should be fliped)
-	unsigned char* srcptr = psrc + (height - 1)*width;
-	unsigned char* dstptr = *ppdist + sizeof(BITMAPINFOHEADER) + 1024;
-
-	for (int j = 0; j < height; ++j, srcptr -= width, dstptr += iStride)
-	{
-		memcpy(dstptr, srcptr, width);
-	}
-
-	return true;
-}
 
 /**
  * Create DBR instance
@@ -203,8 +137,6 @@ static void DetectionWorking(uv_work_t *req)
 						data[i] = worker->buffer[index];
 						index += 2;
 					}
-					// gray conversion
-					// ConvertCameraGrayDataToDIBBuffer(data, size, width, height, &pdibdata, &dibsize);
 					// read barcode
 					ret = DBR_DecodeBufferEx(hBarcode, data, width, height, width, IPF_GrayScaled, &pResults);
 					// release memory
