@@ -38,4 +38,5 @@ Build the **Node.js** extension with Dynamsoft Barcode Reader SDK for Linux. Cre
     ```
     ![camera list in Python](screenshot/linux-node-barcode-reader.PNG)
 
-
+## Blog
+[How to Wrap Dynamsoft Linux Barcode SDK for Node.js](http://www.codepool.biz/linux-barcode-sdk-node-javascript.html)
