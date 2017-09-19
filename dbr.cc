@@ -193,8 +193,9 @@ static void DetectionDone(uv_work_t *req,int status)
 	DBR_FreeBarcodeResults(&pResults);
 
     // run the callback
-	const unsigned argc = 1;
-	Local<Value> argv[argc] = {barcodeResults};
+	const unsigned argc = 2;
+	Local<Number> err = Number::New(isolate, errorCode);
+	Local<Value> argv[argc] = {err, barcodeResults};
 	Local<Function> cb = Local<Function>::New(isolate, worker->callback);
     cb->Call(isolate->GetCurrentContext()->Global(), argc, argv);
 

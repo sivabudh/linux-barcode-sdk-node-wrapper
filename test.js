@@ -5,7 +5,7 @@ var barcodeTypes = 0x3FF | 0x2000000 | 0x8000000 |
                    0x4000000;  // 1D, QRCODE, PDF417, DataMatrix
 
 function decodeFileAsync(fileName) {
-  dbr.decodeFileAsync(fileName, barcodeTypes, function(msg) {
+  dbr.decodeFileAsync(fileName, barcodeTypes, function(err, msg) {
     let result = null;
     for (index in msg) {
       result = msg[index];
@@ -27,7 +27,7 @@ function decodeFileStreamAsync(fileName) {
     }
     let buffer = new Buffer(fileSize);
     fs.read(fd, buffer, 0, fileSize, 0, function(err, bytesRead, data) {
-      dbr.decodeFileStreamAsync(buffer, fileSize, barcodeTypes, function(msg) {
+      dbr.decodeFileStreamAsync(buffer, fileSize, barcodeTypes, function(err, msg) {
         console.log(fileName);
         let result = null;
         for (index in msg) {
@@ -52,7 +52,7 @@ function decodeYUYVAsync(fileName, width, height) {
     }
     let buffer = new Buffer(fileSize);
     fs.read(fd, buffer, 0, fileSize, 0, function(err, bytesRead, data) {
-      dbr.decodeYUYVAsync(buffer, width, height, barcodeTypes, function(msg) {
+      dbr.decodeYUYVAsync(buffer, width, height, barcodeTypes, function(err, msg) {
         let result = null;
         for (index in msg) {
           result = msg[index];
