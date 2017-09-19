@@ -12,39 +12,6 @@ using namespace v8;
 // barcode reader handler
 void* hBarcode = NULL; 
 
-// Barcode format
-const char * GetFormatStr(int format)
-{
-	if (format == BF_CODE_39)
-		return "CODE_39";
-	if (format == BF_CODE_128)
-		return "CODE_128";
-	if (format == BF_CODE_93)
-		return "CODE_93";
-	if (format == BF_CODABAR)
-		return "CODABAR";
-	if (format == BF_ITF)
-		return "ITF";
-	if (format == BF_UPC_A)
-		return "UPC_A";
-	if (format == BF_UPC_E)
-		return "UPC_E";
-	if (format == BF_EAN_13)
-		return "EAN_13";
-	if (format == BF_EAN_8)
-		return "EAN_8";
-	if (format == BF_INDUSTRIAL_25)
-		return "INDUSTRIAL_25";
-	if (format == BF_QR_CODE)
-		return "QR_CODE";
-	if (format == BF_PDF417)
-		return "PDF417";
-	if (format == BF_DATAMATRIX)
-		return "DATAMATRIX";
-
-	return "UNKNOWN";
-}
-
 typedef enum {
 	NO_BUFFER,
 	FILE_STREAM,
@@ -184,7 +151,7 @@ static void DetectionDone(uv_work_t *req,int status)
 		tmp = ppBarcodes[i];
 
 		Local<Object> result = Object::New(isolate);
-		result->Set(String::NewFromUtf8(isolate, "format"), String::NewFromUtf8(isolate, GetFormatStr(tmp->emBarcodeFormat)));
+		result->Set(String::NewFromUtf8(isolate, "format"), String::NewFromUtf8(isolate, tmp->pBarcodeFormatString));
 		result->Set(String::NewFromUtf8(isolate, "value"), String::NewFromUtf8(isolate, tmp->pBarcodeData));
 		barcodeResults->Set(Number::New(isolate, i), result);
 	}
