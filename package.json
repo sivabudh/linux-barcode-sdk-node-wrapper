@@ -1,0 +1,15 @@
+{
+  "name": "barcode-dbr",
+  "version": "0.1.0",
+  "description": "barcode 128",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "author": "Sivabudh Umpudh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.4",
+    "lodash": "^4.17.4"
+  }
+}
